@@ -26,9 +26,9 @@ from PyQt4 import QtCore, QtGui
 class ImageDialog(QtGui.QDialog):
 	def setupUi(self):
 		self.setObjectName('Elevation')
-		self.resize(640,480)
+		self.resize(320, 200)
 		self.image = QtGui.QLabel(self)
-		self.image.setGeometry(0,0,640,480)
+		self.image.setGeometry(0,0,320,200)
 
 	def __init__(self):
 		QtGui.QDialog.__init__(self)
