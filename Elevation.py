@@ -89,8 +89,10 @@ class Elevation:
 			results = json.loads(jsonresult).get('results')
 			if 0 < len(results):
 				elevation = int(round(results[0].get('elevation')))
+				resolution = int(round(results[0].get('resolution')))
+
 				# save point
-				self.save_point(point, elevation)
+				self.save_point(point, elevation, resolution)
 				#find marker
 				marker = 'http://bit.ly/aUwrKs'
 				for x in range(0, 1000):
@@ -117,7 +119,7 @@ class Elevation:
 			QMessageBox.warning(self.iface.mainWindow(), 'Elevation', 'JSON decode failed: '+str(jsonresult), QMessageBox.Ok, QMessageBox.Ok)
  
 	# save point to file, point is in project's crs
-	def save_point(self, point, elevation):
+	def save_point(self, point, elevation, resolution):
 		# create and add the point layer if not exists or not set
 		if not QgsMapLayerRegistry.instance().mapLayer(self.layerid) :
 			# create layer with same CRS as project
@@ -125,7 +127,7 @@ class Elevation:
 			self.provider = self.layer.dataProvider()
 
 			# add fields
-			self.provider.addAttributes( [QgsField("elevation", QVariant.Double)] )
+			self.provider.addAttributes( [QgsField("elevation", QVariant.Double), QgsField("resolution", QVariant.Double)] )
 			self.layer.updateFields()
 
 			# Labels on
@@ -141,9 +143,10 @@ class Elevation:
 
 		# add a feature
 		fet = QgsFeature()
-		fet.initAttributes(1)
+		fet.initAttributes(2)
 		fet.setGeometry(QgsGeometry.fromPoint(self.reprojectgeographic.transform(point)))
 		fet.setAttribute(0, elevation)
+		fet.setAttribute(1, resolution)
 		self.provider.addFeatures( [ fet ] )
 
 		# update layer's extent when new features have been added
