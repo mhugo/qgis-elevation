@@ -52,6 +52,9 @@ class Elevation:
 		self.iface.addPluginToMenu("Elevation", self.aboutAction)
 		self.iface.addToolBarIcon(self.obtainAction)
 
+		self.dlg = ImageDialog()
+		self.dlg.move( 0, 0 )
+
 		QObject.connect(self.obtainAction, SIGNAL("triggered()"), self.obtain) 
 		QObject.connect(self.aboutAction, SIGNAL("triggered()"), self.about) 
 	
@@ -107,10 +110,9 @@ class Elevation:
 				os.close(image[0])
 				urllib.urlretrieve('http://maps.google.com/maps/api/staticmap?size=640x480&maptype=terrain\&markers=icon:'+marker+'|'+str(pt[1])+','+str(pt[0])+'&mobile=true&sensor=false', image[1])
 				QgsMessageLog.instance().logMessage('http://maps.google.com/maps/api/staticmap?size=640x4802&maptype=terrain\&markers=icon:'+marker+'|'+str(pt[1])+','+str(pt[0])+'&mobile=true&sensor=false')
-				dlg = ImageDialog()
-				dlg.image.setPixmap(QPixmap(image[1]))
-				dlg.show()
-				dlg.exec_()
+				self.dlg.image.setPixmap(QPixmap(image[1]))
+				self.dlg.show()
+				self.dlg.exec_()
 				if os.path.exists(image[1]):
 					os.unlink(image[1])
 			else:
